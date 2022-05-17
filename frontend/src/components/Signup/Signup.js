@@ -3,17 +3,17 @@ import { CREATE_USER_MUTATION } from "../../GraphQL/Mutations";
 import { useMutation } from "@apollo/client";
 
 function Signup() {
-    const [email, setEmail] = useState("");
+    const [username, setUsername] = useState("");
     const [password, setPassword] = useState("");
 
     //post
-    const [submitSignup, { error }] = useMutation(CREATE_USER_MUTATION);
+    const [register, { error }] = useMutation(CREATE_USER_MUTATION);
 
     //button to register
     const addUser = () => {
-        submitSignup({
+        register({
             variables: {
-                email: email,
+                username: username,
                 password: password,
             },
         });
@@ -26,9 +26,9 @@ function Signup() {
         <div>
             <input
                 type="text"
-                placeholder="Email"
+                placeholder="Username"
                 onChange={(e) => {
-                    setEmail(e.target.value);
+                    setUsername(e.target.value);
                 }}
             />
             <input
