@@ -6,6 +6,7 @@ module.exports = gql`
     id: ID!
     username: String!
     password: String!
+    city: String!
 
   }
   
@@ -13,6 +14,7 @@ module.exports = gql`
     id: ID!
     username: String!
     password: String!
+    token: String!
    
   }
 
@@ -23,8 +25,22 @@ module.exports = gql`
   }
 
 
+  type Query {
+    getAllUsers: [UserList]!
+    getProfile(userId: ID!): User!
+  }
+
   type Mutation {
     register(username: String!, password: String!): LoggedUser!
     login(username: String!, password: String!): LoggedUser!
+    
+      editProfile(
+      userId: ID!
+      city: String!
+    ): User!
+    
+    
   }
+  
+  
 `;

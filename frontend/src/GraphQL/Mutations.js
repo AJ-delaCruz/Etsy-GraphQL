@@ -24,6 +24,19 @@ export const LOGIN_USER_MUTATION = gql`
       password: $password
     ) {
     username
+    token
     }
   }
+`;
+
+export const EDIT_PROFILE = gql`
+  mutation editProfile(
+    $userId: ID!
+     $city: String!
+  ) {
+    editProfile(userId: $userId, city: $city) {
+      city
+    }
+  }
+
 `;
