@@ -17,6 +17,8 @@ const usersSchema = new Schema({
         email: {type: String},
         phoneNum: {type: Number},
         birthDay: {type: Date},
+        shopName:{ type: String},
+        shopImg:{ type: String},
         products: [
             {
                 productId: {

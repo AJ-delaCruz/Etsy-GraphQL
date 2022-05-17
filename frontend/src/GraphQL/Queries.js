@@ -21,3 +21,32 @@ export const GET_PROFILE = gql`
     }
   }
 `;
+
+export const GET_PRODUCTS = gql`
+  query getProducts(
+    $categories: String!
+    $filters: String!
+    $sortBy: String!
+    $filterBySearch: String!
+   
+  ) {
+    getProducts(
+       $categories: categories
+    $filters: $filters
+    $sortBy: $sortBy
+     $filterBySearch: filterBySearch
+    ) {
+     
+        title
+        body
+        tags
+        points
+        views
+        createdAt
+        updatedAt
+        answerCount
+      
+    }
+  }
+
+`;

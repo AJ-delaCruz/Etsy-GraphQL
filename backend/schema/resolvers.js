@@ -1,5 +1,6 @@
 const {UserInputError} = require('apollo-server');
 const User = require('../Models/UserModel');
+const Product = require("../Models/ProductModel");
 const jwt = require('jsonwebtoken');
 const {secret} = require('../Utils/config')
 const {auth} = require("../Utils/passport");
@@ -15,6 +16,75 @@ module.exports = {
             const {userId} = args;
             const getUser = await User.findById(userId);
             return getUser;
+        },
+        getShop: async (_, args) => {
+            const {userId} = args;
+            const getShop = await User.findById(userId);
+            return getShop;
+        },
+        getAllProducts: async () => {
+            const allProducts= await Product.find({}).limit(10);
+            return allProducts;
+        },
+        getProducts: async (_, args) => {
+            const { categories, filters, sortBy, filterBySearc} = args;
+
+            let sortQuery;
+            switch (sortBy) {
+                case 'price':
+                    sortQuery = { price: -1 };
+                    break;
+                case 'newest':
+                    sortQuery = { createdAt: -1 };
+                    break;
+                case 'oldest':
+                    sortQuery = { createdAt: 1 };
+                    break;
+                default:
+                    sortQuery = { hotAlgo: -1 };
+            }
+
+            let findQuery = {};
+            if (filterByTag) {
+                findQuery = { tags: { $all: [filterByTag] } };
+            } else if (filterBySearch) {
+                findQuery = {
+                    $or: [
+                        {
+                            title: {
+                                $regex: filterBySearch,
+                                $options: 'i',
+                            },
+                        },
+                        {
+                            body: {
+                                $regex: filterBySearch,
+                                $options: 'i',
+                            },
+                        },
+                    ],
+                };
+            }
+
+            try {
+                const quesCount = await Question.find(findQuery).countDocuments();
+                const paginated = paginateResults(page, limit, quesCount);
+                const questions = await Question.find(findQuery)
+                    .sort(sortQuery)
+                    .limit(limit)
+                    .skip(paginated.startIndex)
+                    .populate('author', 'username');
+
+                const paginatedQues = {
+                    previous: paginated.results.previous,
+                    questions,
+                    next: paginated.results.next,
+                };
+
+                return paginatedQues;
+            } catch (err) {
+                throw new UserInputError(errorHandler(err));
+            }
         },
     },
     Mutation: {
@@ -90,5 +160,108 @@ module.exports = {
                 throw new UserInputError(err);
             }
         },
+
+        createShop: async (_, args) => {
+            const {userId, shopName} = args;
+
+
+            const newShop= {
+                shopName
+            };
+
+            try {
+                const shopExist = await User.findOne({
+                    shopName: {$regex: new RegExp('^' + shopName + '$', 'i')}
+                });
+                if (!shopExist) {
+                    const createShop = await User.findByIdAndUpdate(
+                        userId,  newShop, {new: true}
+                    )
+                    return createShop;
+                }
+            } catch (err) {
+                throw new UserInputError("Shop name already exists");
+            }
+
+
+            return {
+                id: createShop._id,
+                shopName: createShop.shopName,
+
+            };
+        },
+
+        editShop: async (_, args) => {
+            const {userId, shopName, shopImg} = args;
+
+
+            const updateshop = {
+                shopName, shopImg
+            };
+
+            const updatedShop = await User.findByIdAndUpdate(
+                userId, updateshop, {new: true}
+            )
+
+
+
+            return {
+                id: updatedShop._id,
+                shopName: updatedShop.shopName,
+                shopImg: updatedShop.shopImg
+
+            };
+        },
+
+
+        createProduct: async (_, args) => {
+            const {sellerId, title, img, description, categories, price, quantity} = args;
+
+
+
+            const newProduct = new Product({
+                sellerId, title, img, description, categories, price, quantity
+            });
+
+            const savedProduct = await newProduct.save();
+            return {
+                id: savedProduct._id,
+                sellerId: savedProduct.sellerId,
+                title: savedProduct.title,
+                img: savedProduct.img,
+                description: savedProduct.description,
+                categories: savedProduct.categories,
+                price: savedProduct.price,
+                quantity: savedProduct.quantity
+
+            };
+        },
+
+        editProduct: async (_, args) => {
+            const {id, title, img, description, categories, price, quantity} = args;
+
+
+            const updateProduct = {
+                title, img, description, categories, price, quantity
+            };
+
+            const savedProduct = await Product.findByIdAndUpdate(
+                id, updateProduct, {new: true}
+            )
+
+
+
+            return {
+
+                title: savedProduct.title,
+                img: savedProduct.img,
+                description: savedProduct.description,
+                categories: savedProduct.categories,
+                price: savedProduct.price,
+                quantity: savedProduct.quantity
+
+            };
+        },
+
     },
 };
