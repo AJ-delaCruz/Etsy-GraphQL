@@ -1,129 +1,46 @@
-import React, {Component} from "react";
-import '../../App.css';
-import axios from 'axios';
-import cookie from "react-cookies";
-import {Navigate} from "react-router";
+import React, { useState } from "react";
+import { CREATE_USER_MUTATION } from "../../GraphQL/Mutations";
+import { useMutation } from "@apollo/client";
 
-class Signup extends Component {
-    constructor(props) {
-        super(props);
+function Signup() {
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
 
-        this.state = {
-            username: "",
-            password: "",
-            authFlag: false,
-            errorMsg: null,
-        };
+    //post
+    const [submitSignup, { error }] = useMutation(CREATE_USER_MUTATION);
 
-        this.submitSignup = this.submitSignup.bind(this);
-        this.passwordChangeHandler = this.passwordChangeHandler.bind(this);
-        this.usernameChangeHandler = this.usernameChangeHandler.bind(this);
+    //button to register
+    const addUser = () => {
+        submitSignup({
+            variables: {
+                email: email,
+                password: password,
+            },
+        });
 
-    }
-
-
-    //username change handler
-    usernameChangeHandler = (e) => {
-        this.setState({
-            username: e.target.value
-        })
-    }
-
-    //password change handler to update state variable with the text entered by the user
-    passwordChangeHandler = (e) => {
-        this.setState({
-            password: e.target.value
-        })
-    }
-
-    submitSignup(e) {
-        var headers = new Headers();
-        //prevent page from refresh
-        e.preventDefault();
-        const data = {
-            // firstName: this.state.firstName,
-            // LastName: this.state.LastName,
-            // street: this.state.street,
-            // city: this.state.city,
-            // state: this.state.state,
-            // country: this.state.country,
-            // zipcode: this.state.zipcode,
-            username: this.state.username,
-            // phoneNum: this.state.phoneNum,
-            password: this.state.password
+        if (error) {
+            console.log(error);
         }
-        //set the with credentials to true
-        axios.defaults.withCredentials = true;
-        //make a post request with the user data
-        axios.post('http://localhost:3001/signup', data)
-            .then(response => {
-                console.log("Status Code : ", response.status);
-                if (response.status === 200) {
-                    this.setState({
-                        authFlag: true
-                    })
-                } else {
-                    this.setState({
-                        authFlag: false
-                    })
-                }
-            })
-            .catch(err => {
-                console.log(err);
-                //set invalid message
-                this.setState({
-                    errorMsg: "Invalid."
-                });
-            });
-
-    }
-
-    render() {
-        let redirectVar = null;
-        if (this.state.authFlag) {
-            redirectVar = <Navigate to="/profile"/>
-        }
-
-
-        return (
-            <div>
-                {redirectVar}
-                <div className="container">
-                    <div className="singup-form">
-                        <div className="main-div">
-                            <div className="panel">
-                                <h2>Sign up</h2>
-                            </div>
-
-
-                            <div className="form-group">
-                                <input
-                                    onChange={this.usernameChangeHandler}
-                                    type="text"
-                                    className="form-control"
-                                    name="username"
-                                    placeholder="username"
-                                />
-                            </div>
-
-                            <div className="form-group">
-                                <input
-                                    onChange={this.passwordChangeHandler}
-                                    type="Password"
-                                    className="form-control"
-                                    // name="password"
-                                    placeholder="Password"
-                                />
-                            </div>
-                            <button onClick={this.submitSignup} className="btn btn-primary">
-                                Register
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        );
-    }
+    };
+    return (
+        <div>
+            <input
+                type="text"
+                placeholder="Email"
+                onChange={(e) => {
+                    setEmail(e.target.value);
+                }}
+            />
+            <input
+                type="text"
+                placeholder="Password"
+                onChange={(e) => {
+                    setPassword(e.target.value);
+                }}
+            />
+            <button onClick={addUser}> Register</button>
+        </div>
+    );
 }
 
 export default Signup;

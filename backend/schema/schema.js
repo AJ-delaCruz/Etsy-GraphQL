@@ -10,6 +10,7 @@ const {
     GraphQLNonNull
 } = graphql;
 
+const userData = [];
 
 //sample code from class graphQL
 // dummy data
@@ -87,7 +88,8 @@ const RootQuery = new GraphQLObjectType({
             resolve(parent, args) {
                 return authors;
             }
-        }
+        },
+
     }
 });
 
@@ -134,10 +136,31 @@ const Mutation = new GraphQLObjectType({
                 books.push(book);
                 return book;
             }
-        }
+        },
+
+        createUser: {
+            type: UserType,
+            args: {
+                email: { type: GraphQLString },
+                password: { type: GraphQLString },
+            },
+            resolve(parent, args) {
+                userData.push({
+                    id: userData.length + 1,
+                    email: args.email,
+                    password: args.password,
+                });
+                return args;
+            },
+        },
+
+
 
     }
 });
+
+
+
 
 const schema = new GraphQLSchema({
     query: RootQuery,
