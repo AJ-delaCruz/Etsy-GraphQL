@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { LOGIN_USER_MUTATION } from "../../GraphQL/Mutations";
 import { useMutation } from "@apollo/client";
+import jwt_decode from 'jwt-decode';
 
 function Login() {
     const [username, setUsername] = useState("");
@@ -14,13 +15,28 @@ function Login() {
        loginUser({
             variables: {username: username, password: password},
             update: (_, { data }) => {
-                console.log("loggin in")
-                console.log(data);
-                // notify(`Welcome, ${data.login.username}! You're logged in.`);
-                // reset();
-                // closeModal();
+                console.log("logging in")
+                console.log(data.login);
+
+
+                //auth
+                const token = data.login.token
+                console.log(token)
+                const decoded = jwt_decode(token);
+                console.log("decoded " + decoded);
+                console.log(decoded);
+                console.log(decoded.id);
+                console.log(decoded.username);
+
+                localStorage.setItem("token", token);
+                localStorage.setItem("user_id", decoded.id);
+                localStorage.setItem("username", decoded.username);
+
+                console.log(localStorage.getItem("username"));
             },
         });
+
+
 
     };
     return (
