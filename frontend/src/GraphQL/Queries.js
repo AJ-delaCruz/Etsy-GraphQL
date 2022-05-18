@@ -31,20 +31,33 @@ export const GET_PRODUCTS = gql`
    
   ) {
     getProducts(
-       $categories: categories
-    $filters: $filters
-    $sortBy: $sortBy
-     $filterBySearch: filterBySearch
+        categories: $categories
+        filters: $filters
+        sortBy: $sortBy
+        filterBySearch: $filterBySearch
     ) {
      
-        title
-        body
-        tags
-        points
-        views
-        createdAt
-        updatedAt
-        answerCount
+        sellerId, title, img, description, categories, price, quantity
+      
+    }
+  }
+
+`;
+
+export const  GET_ALL_PRODUCTS = gql`
+    query  {
+    getAllProducts {
+       id, sellerId, title, img, description, categories, price, quantity
+
+    }
+}
+
+`;
+
+export const GET_PRODUCT_OVERVIEW = gql`
+  query getSingleProduct($id: ID!) {
+    getSingleProduct(id: $id) {
+        sellerId, title, img, description, categories, price, quantity
       
     }
   }

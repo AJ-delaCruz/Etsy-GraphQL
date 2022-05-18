@@ -22,70 +22,51 @@ module.exports = {
             const getShop = await User.findById(userId);
             return getShop;
         },
+        getSingleProduct: async (_, args) => {
+            const {id} = args;
+            const singleProduct = await Product.findById(id);
+            return singleProduct;
+        },
         getAllProducts: async () => {
-            const allProducts= await Product.find({}).limit(10);
+            const allProducts = await Product.find({}).limit(10);
             return allProducts;
         },
         getProducts: async (_, args) => {
-            const { categories, filters, sortBy, filterBySearc} = args;
+            const {categories, sortBy, filterBySearch} = args;
+            // const {categories, sortBy, filterBySearch} = args;
+            // const {categories} = args;
 
-            let sortQuery;
-            switch (sortBy) {
-                case 'price':
-                    sortQuery = { price: -1 };
-                    break;
-                case 'newest':
-                    sortQuery = { createdAt: -1 };
-                    break;
-                case 'oldest':
-                    sortQuery = { createdAt: 1 };
-                    break;
-                default:
-                    sortQuery = { hotAlgo: -1 };
-            }
+            let products, sortQuery;
 
-            let findQuery = {};
-            if (filterByTag) {
-                findQuery = { tags: { $all: [filterByTag] } };
+            if (categories) {
+                products = await Product.find({
+                    categories: {
+                        $in: [categories], //list products with specific category
+                    },
+                });
             } else if (filterBySearch) {
-                findQuery = {
-                    $or: [
-                        {
-                            title: {
-                                $regex: filterBySearch,
-                                $options: 'i',
-                            },
-                        },
-                        {
-                            body: {
-                                $regex: filterBySearch,
-                                $options: 'i',
-                            },
-                        },
-                    ],
-                };
-            }
+                products = await Product.find({
+                    title: {
+                        $regex: filterBySearch,
+                    },
+                });
+            } else if (sortBy) {
+                switch (sortBy) {
+                    case 'price':
+                        sortQuery = {price: -1};
+                        break;
+                    case 'oldest':
+                        sortQuery = {createdAt: 1};
+                        break;
+                    default:
+                        sortQuery = {createdAt: -1};
+                }
+                products = await Product.find({}).sort(sortQuery);
+            } else products = await Product.find({});
 
-            try {
-                const quesCount = await Question.find(findQuery).countDocuments();
-                const paginated = paginateResults(page, limit, quesCount);
-                const questions = await Question.find(findQuery)
-                    .sort(sortQuery)
-                    .limit(limit)
-                    .skip(paginated.startIndex)
-                    .populate('author', 'username');
 
-                const paginatedQues = {
-                    previous: paginated.results.previous,
-                    questions,
-                    next: paginated.results.next,
-                };
-
-                return paginatedQues;
-            } catch (err) {
-                throw new UserInputError(errorHandler(err));
-            }
-        },
+            return products;
+        }
     },
     Mutation: {
         register: async (_, args) => {
@@ -137,7 +118,7 @@ module.exports = {
             const {userId, name, img, street, state, city, country, zipCode, email, phoneNum, birthDay} = args;
 
 
-            const updatedProfile= {
+            const updatedProfile = {
                 name, img, street, state, city, country, zipCode, email, phoneNum, birthDay
             };
 
@@ -165,7 +146,7 @@ module.exports = {
             const {userId, shopName} = args;
 
 
-            const newShop= {
+            const newShop = {
                 shopName
             };
 
@@ -175,7 +156,7 @@ module.exports = {
                 });
                 if (!shopExist) {
                     const createShop = await User.findByIdAndUpdate(
-                        userId,  newShop, {new: true}
+                        userId, newShop, {new: true}
                     )
                     return createShop;
                 }
@@ -204,7 +185,6 @@ module.exports = {
             )
 
 
-
             return {
                 id: updatedShop._id,
                 shopName: updatedShop.shopName,
@@ -216,7 +196,6 @@ module.exports = {
 
         createProduct: async (_, args) => {
             const {sellerId, title, img, description, categories, price, quantity} = args;
-
 
 
             const newProduct = new Product({
@@ -248,7 +227,6 @@ module.exports = {
             const savedProduct = await Product.findByIdAndUpdate(
                 id, updateProduct, {new: true}
             )
-
 
 
             return {

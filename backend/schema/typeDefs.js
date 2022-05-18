@@ -36,14 +36,14 @@ module.exports = gql`
   }
   
   type ProductList  {
-    id: ID!
-    sellerId: ID!
-    title: String!
-    description: String!
-    img: String!
-    categories: [String]!
-    quantity: Int!
-    price:  Int!
+    id: ID
+    sellerId: ID
+    title: String
+    description: String
+    img: String
+    categories: [String]
+    quantity: Int
+    price:  Int
 
   
   }
@@ -53,8 +53,15 @@ module.exports = gql`
     getAllUsers: [UserList]!
     getProfile(userId: ID!): User!
     getShop(userId: ID!): User!
-    getProducts(title: String!): ProductList!
-    getAllProducts: [ProductList]!
+    getSingleProduct(id: ID!) : ProductList!
+    getProducts(
+    title: String, 
+    categories: String, 
+    query: String, 
+    sortBy: String, 
+    filterBySearch: String): [ProductList]
+    
+    getAllProducts: [ProductList]
    
     
   }
