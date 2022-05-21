@@ -2,20 +2,23 @@ import {gql} from "@apollo/client";
 
 export const CREATE_USER_MUTATION = gql`
   mutation register(
-    $username: String!,
-    $password: String!,
+    $name: String!
+    $username: String!
+    $password: String!
   ) {
     register(
-      username: $username,
-      password: $password,
+      name: $name
+      username: $username
+      password: $password
     ) {
     username
+    name
     }
   }
 `;
 export const LOGIN_USER_MUTATION = gql`
   mutation login(
-    $username: String!,
+    $username: String!
     $password: String!
   ) {
     login(
@@ -31,7 +34,7 @@ export const LOGIN_USER_MUTATION = gql`
 export const EDIT_PROFILE = gql`
   mutation editProfile(
     $userId: ID!
-     $city: String!
+     $city: String
   ) {
     editProfile(userId: $userId, city: $city ) {
       city
@@ -49,9 +52,21 @@ const UPLOAD_FILE = gql`
   }
 `;
 
+
+export const CREATE_SHOP_MUTATION = gql`
+  mutation createShop(
+     $userId: ID!
+    $shopName: String!,
+  ) {
+    createShop( userId: $userId, shopName: $shopName) {
+      shopName
+    }
+  }
+`;
 export const CREATE_PRODUCT_MUTATION = gql`
   mutation createProduct(
     $sellerId: ID!
+    $shopName: String!
     $title: String!
     $description: String!
     $img: String!
@@ -61,6 +76,7 @@ export const CREATE_PRODUCT_MUTATION = gql`
   ) {
     createProduct(
     sellerId: $sellerId
+    shopName: $shopName
     title:  $title
     description: $description
     img: $img
@@ -69,10 +85,37 @@ export const CREATE_PRODUCT_MUTATION = gql`
     price:$price
     ) {
      sellerId
+     shopName
     title
     description
     img
     categories
+    quantity
+    price
+    }
+  }
+`;
+export const CREATE_ORDER_MUTATION = gql`
+  mutation createOrder(
+    $productId: ID!
+    $userId: ID!
+    $title: String!
+    $img: String!
+    $quantity: Int!
+    $price:  Int!
+  ) {
+    createOrder(
+    productId: $productId
+    userId: $userId
+    title:  $title
+    img: $img
+    quantity:$quantity
+    price:$price
+    ) {
+    productId
+    userId
+    title
+    img
     quantity
     price
     }
