@@ -4,19 +4,65 @@ import Navbar from "../LandingPage/Navbar";
 import {Button} from "react-bootstrap";
 import {useSelector} from "react-redux";
 import {Link} from "react-router-dom";
+import {useState} from "react";
+import {useMutation} from "@apollo/client";
+import {CREATE_ORDER_MUTATION, CREATE_USER_MUTATION} from "../../GraphQL/Mutations";
 
 
 const Checkout = () => {
     const order = useSelector((state) => state.cart);
+    const userId = localStorage.getItem("user_id");
+console.log(order.products[0]);
+    console.log(order.quantity);
+    const [createOrder, {error}] = useMutation(CREATE_ORDER_MUTATION);
+
+    //button to order
+    const submitOrder = () => {
+        createOrder({
+            variables: {
+                productId: order.products[0].id,
+                userId: userId,
+                title: order.products[0].title,
+                img: order.products[0].img,
+                quantity: order.products[0].quantity,
+                price: order.products[0].price
+            },
+        });
+
+        if (error) {
+            console.log(error);
+        }
+    };
+
+    // const submitOrder = () => {
+    //     for (let i = 0; i < order.length; i++)
+    //     {
+    //         createOrder({
+    //             variables: {
+    //                 id: order.products[i].id,
+    //                 userId: userId,
+    //                 title: order.products[i].title,
+    //                 img: order.products[i].img,
+    //                 quantity: order.products[i].quantity,
+    //                 price: order.products[i].price
+    //             },
+    //         });
+    //     }
+    //
+    //     if (error) {
+    //         console.log(error);
+    //     }
+    // };
     return (
 
         <div style={{marginBottom: "100px"}}>
             {<Navbar/>}
 
             <div
-                //     style={{
-                //     padding: "250px",
-                // marginTop: "-250px"}}
+                style={{
+                    padding: "250px",
+                    marginTop: "-250px"
+                }}
             >
 
 
@@ -37,11 +83,11 @@ const Checkout = () => {
 
 
                     <Link to={`/home`}>
-                    <Button style={{
-                        fontWeight: "600",
-                        padding: "10px",
-                    }}>Keep Shopping
-                    </Button>
+                        <Button style={{
+                            fontWeight: "600",
+                            padding: "10px",
+                        }}>Keep Shopping
+                        </Button>
                     </Link>
                 < /div>
 
@@ -98,7 +144,7 @@ const Checkout = () => {
                                         </div>
 
                                         <div className="productCategory" style={{}}>
-                                            <b>Description:</b> {item.desc}
+                                            <b>Description:</b> {item.description}
 
                                         </div>
 
@@ -208,7 +254,7 @@ const Checkout = () => {
 
                         </div>
 
-                        <Button style={{
+                        <Button onClick={submitOrder} style={{
                             width: "100%",
                             padding: "10px",
                             backgroundColor: "black",
@@ -220,7 +266,7 @@ const Checkout = () => {
                             // margin: "30px 0px"
                             // marginTop:"-30px"
                         }}>
-                            Proceed to checkout
+                            Place Order
                         </Button>
 
                     </div>
