@@ -1,10 +1,14 @@
 const {UserInputError} = require('apollo-server');
 const User = require('../Models/UserModel');
 const Product = require("../Models/ProductModel");
+const Order = require("../Models/OrderModel");
 const jwt = require('jsonwebtoken');
 const {secret} = require('../Utils/config')
-const {auth} = require("../Utils/passport");
-auth();
+// const {auth} = require("../Utils/passport");
+const bcrypt = require('bcrypt');
+const {checkAuth} = require("../utils/passport");
+
+// auth();
 
 module.exports = {
     Query: {
@@ -37,7 +41,7 @@ module.exports = {
             return singleProduct;
         },
         getAllProducts: async () => {
-            const allProducts = await Product.find({}).limit(10);
+            const allProducts = await Product.find({}).limit(20);
             return allProducts;
         },
         getProducts: async (_, args) => {
@@ -85,10 +89,24 @@ module.exports = {
     },
     Mutation: {
         register: async (_, args) => {
-            const {username, password} = args;
+            const {name, username, password} = args;
+
+
+            const existingUser = await User.findOne({
+                username: username,
+            });
+
+            console.log(existingUser);
+            if (existingUser) {
+                throw new UserInputError(`Username '${username}' is already taken.`);
+            }
+
+            const saltRounds = 10;
+            const passwordHash = await bcrypt.hash(password, saltRounds);
             const user = new User({
+                name,
                 username,
-                password
+                password: passwordHash
             });
 
             const savedUser = await user.save();
@@ -105,15 +123,22 @@ module.exports = {
             };
         },
 
-        login: async (_, args) => {
+        login: async (_, args, checkAuth) => {
             const {username, password} = args;
             const user = await User.findOne({
-                username: {$regex: new RegExp('^' + username + '$', 'i')},
-                password: {$regex: new RegExp('^' + password + '$', 'i')}
+                username: username,
             });
 
             if (!user) {
                 throw new UserInputError("Username or password is invalid");
+            }
+            const credentialsValid = await bcrypt.compare(
+                password,
+                user.password
+            );
+
+            if (!credentialsValid) {
+                throw new UserInputError('Invalid credentials.');
             }
 
             const payload = {id: user._id, username: user.username};
@@ -190,7 +215,7 @@ module.exports = {
                 });
                 if (!shopExist) {
                     const createShop = await User.findByIdAndUpdate(
-                        userId, newShop, {new: true}
+                        userId, {$set: newShop}, {new: true}
                     )
                     return createShop;
                 }
@@ -198,12 +223,6 @@ module.exports = {
                 throw new UserInputError("Shop name already exists");
             }
 
-
-            return {
-                id: createShop._id,
-                shopName: createShop.shopName,
-
-            };
         },
 
         editShop: async (_, args) => {
@@ -229,16 +248,17 @@ module.exports = {
 
 
         createProduct: async (_, args) => {
-            const {sellerId, title, img, description, categories, price, quantity} = args;
+            const {sellerId, shopName, title, img, description, categories, price, quantity} = args;
 
 
             const newProduct = new Product({
-                sellerId, title, img, description, categories, price, quantity
+                sellerId, shopName, title, img, description, categories, price, quantity
             });
 
             const savedProduct = await newProduct.save();
             return {
                 id: savedProduct._id,
+                shopName: savedProduct.shopName,
                 sellerId: savedProduct.sellerId,
                 title: savedProduct.title,
                 img: savedProduct.img,
@@ -275,8 +295,28 @@ module.exports = {
             };
         },
 
+        createOrder: async (_, args) => {
+            const {productId, userId, title, img, price, quantity} = args;
+
+            const newOrder = new Order({
+                userId, productId, title, img, price, quantity
+            });
+
+            const savedOrder = await newOrder.save();
+            return {
+                id: savedOrder._id,
+                productId: savedOrder.productId,
+                userId: savedOrder.userId,
+                title: savedOrder.title,
+                img: savedOrder.img,
+                price: savedOrder.price,
+                quantity: savedOrder.quantity
+
+            };
+        },
+
         singleUpload: async (parent, {file}) => {
-            console.log(file); // always null
+            console.log(file);
         }
 
     },

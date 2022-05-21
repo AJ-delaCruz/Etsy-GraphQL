@@ -4,9 +4,9 @@ module.exports = gql`
   
   type User {
     id: ID!
+    name:String
     username: String!
     password: String!
-    name:String
     img:String
     street: String
     state:String
@@ -43,10 +43,24 @@ module.exports = gql`
   type ProductList  {
     id: ID
     sellerId: ID
+    shopName: String!
     title: String
     description: String
     img: String
     categories: [String]
+    quantity: Int
+    price:  Int
+    sale: Int
+
+  
+  }
+  
+  type Order  {
+    id: ID!
+    productId: ID!
+    userId: ID
+    title: String
+    img: String
     quantity: Int
     price:  Int
 
@@ -67,8 +81,14 @@ module.exports = gql`
   }
 
   type Mutation {
-    register(username: String!, password: String!): LoggedUser!
-    login(username: String!, password: String!): LoggedUser!
+    register(
+    name: String!
+    username: String!
+    password: String!): User!
+    
+    login(
+    username: String!
+    password: String!): LoggedUser!
     
     editProfile(
     userId: ID!
@@ -90,6 +110,7 @@ module.exports = gql`
  
     createProduct(
     sellerId: ID!
+    shopName: String!
     title: String!
     description: String!
     img: String!
@@ -107,6 +128,15 @@ module.exports = gql`
     quantity: Int!
     price:  Int!
     ): ProductList!
+    
+    createOrder(
+    userId: ID!
+    productId: ID!
+    title: String!
+    img: String!
+    quantity: Int!
+    price:  Int!
+    ): Order!
     
     singleUpload(file: Upload!): File!
   }
