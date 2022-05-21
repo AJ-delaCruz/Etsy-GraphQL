@@ -57,14 +57,17 @@ module.exports = gql`
   
   type Order  {
     id: ID!
-    productId: ID!
     userId: ID
+    productId: ID
     title: String
     img: String
     quantity: Int
     price:  Int
-
-  
+  }
+    type Favorite  {
+    id: ID!
+    userId: ID
+    productId: ID
   }
 
 
@@ -77,6 +80,7 @@ module.exports = gql`
     getProducts( title: String, categories: String, sortBy: String, filterBySearch: String): [ProductList]
     getAllProducts: [ProductList]
     uploads: [File]
+    getFavoriteProducts(userId: ID!) : [Favorite]
   
   }
 
@@ -119,6 +123,8 @@ module.exports = gql`
     price:  Int!
     ): ProductList!
     
+    
+    
     editProduct(
     id: ID!
     title: String!
@@ -127,6 +133,10 @@ module.exports = gql`
     categories: [String]!
     quantity: Int!
     price:  Int!
+    ): ProductList!
+    
+    removeProduct(
+    id: ID!
     ): ProductList!
     
     createOrder(
@@ -139,7 +149,15 @@ module.exports = gql`
     ): Order!
     
     singleUpload(file: Upload!): File!
+
+    addFavorite(
+    userId: ID!
+    productId: ID!
+    ): Favorite!
+    
+    removeFavorite(
+    id: ID!
+    ): Favorite!
+  
   }
-  
-  
 `;

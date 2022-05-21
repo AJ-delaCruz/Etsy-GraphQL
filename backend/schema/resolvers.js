@@ -2,6 +2,7 @@ const {UserInputError} = require('apollo-server');
 const User = require('../Models/UserModel');
 const Product = require("../Models/ProductModel");
 const Order = require("../Models/OrderModel");
+const Favorite = require("../Models/FavoriteModel");
 const jwt = require('jsonwebtoken');
 const {secret} = require('../Utils/config')
 // const {auth} = require("../Utils/passport");
@@ -43,6 +44,11 @@ module.exports = {
         getAllProducts: async () => {
             const allProducts = await Product.find({}).limit(20);
             return allProducts;
+        },
+        getFavoriteProducts: async (_, args) => {
+            const {userId} = args;
+            const favoriteProducts = await Favorite.find({userId: userId});
+            return favoriteProducts;
         },
         getProducts: async (_, args) => {
             const {categories, sortBy, filterBySearch} = args;
@@ -294,9 +300,21 @@ module.exports = {
 
             };
         },
+        removeProduct: async (_, args) => {
+            const {id} = args;
+
+            const product = await Product.findById(id);
+            if (!product) {
+                throw new UserInputError(
+                    `Product with ID: ${id} does not exist.`
+                );
+            }
+            await Product.findByIdAndDelete(id);
+            return product;
+        },
 
         createOrder: async (_, args) => {
-            const {productId, userId, title, img, price, quantity} = args;
+            const {userId, productId, title, img, price, quantity} = args;
 
             const newOrder = new Order({
                 userId, productId, title, img, price, quantity
@@ -317,7 +335,39 @@ module.exports = {
 
         singleUpload: async (parent, {file}) => {
             console.log(file);
-        }
+        },
+
+        addFavorite: async (_, args) => {
+            const {userId, productId} = args;
+
+            const newFavorite = new Favorite({
+                userId, productId
+            });
+
+            const savedFavorite = await newFavorite.save();
+            return {
+                id: savedFavorite._id,
+                userId: savedFavorite.userId,
+                productId: savedFavorite.productId,
+
+            };
+        },
+        removeFavorite: async (_, args) => {
+            const {id} = args;
+
+            const favorite = await Favorite.findById(id);
+            if (!favorite) {
+                throw new UserInputError(
+                    `Favorite product with ID: ${id} does not exist.`
+                );
+            }
+            await Favorite.findByIdAndDelete(id);
+            return favorite;
+
+        },
+
+
+
 
     },
 };

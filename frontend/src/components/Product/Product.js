@@ -3,25 +3,31 @@ import styled from "styled-components";
 import {Link} from "react-router-dom";
 import axios from "axios";
 import {useState, useEffect} from "react";
+import {useMutation} from "@apollo/client";
+import {CREATE_FAVORITE_MUTATION} from "../../GraphQL/Mutations";
 
 
 const Product = ({item}) => {
-    // const [fav, setFav] = useState({});
+    const userId = localStorage.getItem("user_id");
 
 
-    // const handleClick = () => {
-    //     const dat = {username: "jay"};
-    //         axios.post(`http://localhost:3001/products/favorites/${item._id}`, dat)
-    //             .then((res) => {
-    //                 console.log(res.data)
-    //             }).catch((error) => {
-    //                 console.log(error)
-    //             });
-    //
-    //         console.log("ADD FAVORITES");
-    //
-    //
-    // };
+
+    const [addFavorite, {error}] = useMutation(CREATE_FAVORITE_MUTATION);
+
+    //button to register
+    const addFavoriteProduct = () => {
+        addFavorite({
+            variables: {
+                userId: userId,
+                productId: item.id,
+            },
+
+        });
+        if (error) {
+            console.log(error);
+        }
+    };
+
 
     return (
         // <Link to={`/productOverview/${item._id}`}>
@@ -55,7 +61,7 @@ const Product = ({item}) => {
 
 
                     <HeartIcon>
-                        {/*onClick={handleClick}>*/}
+                        onClick={addFavoriteProduct}>
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                              className="bi bi-heart HeartIcon" viewBox="-4 1 25 12">
 
