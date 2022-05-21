@@ -5,10 +5,10 @@ import {gql} from "@apollo/client";
 export const GET_PROFILE = gql`
   query 
   getProfile($userId: ID!)  {
-    getProfile(userId: $userId) {
-     
+    getProfile(userId: $userId) { 
+      name
       username
-     
+   
     }
   }
 `;
@@ -71,7 +71,7 @@ export const  GET_ALL_PRODUCTS = gql`
 export const GET_PRODUCT_OVERVIEW = gql`
   query getSingleProduct($id: ID!) {
     getSingleProduct(id: $id) {
-        sellerId, title, img, description, categories, price, quantity
+        id, sellerId, shopName, title, img, description, categories, price, quantity, sale
       
     }
   }

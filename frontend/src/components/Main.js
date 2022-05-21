@@ -14,7 +14,7 @@ import Seller from "./Shop/Seller";
 import ShopHomePage from "./Shop/ShopHomePage";
 import NewShop from "./Shop/NewShop";
 
-// import UpdateShop from "./Shop/UpdateShop";
+import UpdateShop from "./Shop/UpdateShop";
 // import Cart from "./Checkout/Cart";
 // import EditShopProduct from "./Shop/EditShopProduct";
 // import EditShopOwner from "./Shop/EditShopOwner";
@@ -43,9 +43,9 @@ class Main extends Component {
 
                     {/*<Route path="/favorites" element={<Favorite/>}/>*/}
 
-                    {/*<Route path="/shop" element={<ShopHomePage/>}/>*/}
+                    <Route path="/shop" element={<ShopHomePage/>}/>
 
-                    {/*<Route path="/updateShop" element={<UpdateShop/>}/>*/}
+                    <Route path="/updateShop" element={<UpdateShop/>}/>
                     {/*<Route path="/editShopProduct" element={<EditShopProduct/>}/>*/}
                     {/*<Route path="/editShop" element={<EditShopOwner/>}/>*/}
                     {/*<Route path="/cart" element={<Cart/>}/>*/}

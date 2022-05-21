@@ -25,36 +25,36 @@ const Product = ({item}) => {
 
     return (
         // <Link to={`/productOverview/${item._id}`}>
-        <ProductContainer key={item.id}>
+        <div>
+            <ProductContainer key={item.id}>
 
 
-            {/*<img src={item.img} style={{height: "200px"}}/>*/}
+                {/*<img src={item.img} style={{height: "200px"}}/>*/}
 
-            <ProductImage src={item.img}/>
+                <ProductImage src={item.img}/>
 
-            <div style={{
-                position: "absolute", bottom: "0", left: "0", margin: "10px"
-            }}>
+                <div style={{
+                    position: "absolute", bottom: "0", left: "0", margin: "10px"
+                }}>
 
-                {"$" + item.price}
+                    {"$" + item.price}
 
-            </div>
-            <ProductInfo>
-                {/*<div className="productDesc">*/}
-                <ProductOverview>
-                    <Link to={`/productOverview/${item.id}`}>
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" color="black"
-                             className="bi bi-search" viewBox="0 0 16 16">
-                            <path
-                                d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
-                        </svg>
-                    </Link>
-                </ProductOverview>
+                </div>
+                <ProductInfo>
+                    {/*<div className="productDesc">*/}
+                    <ProductOverview>
+                        <Link to={`/productOverview/${item.id}`}>
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 color="black"
+                                 className="bi bi-search" viewBox="0 0 16 16">
+                                <path
+                                    d="M11.742 10.344a6.5 6.5 0 1 0-1.397 1.398h-.001c.03.04.062.078.098.115l3.85 3.85a1 1 0 0 0 1.415-1.414l-3.85-3.85a1.007 1.007 0 0 0-.115-.1zM12 6.5a5.5 5.5 0 1 1-11 0 5.5 5.5 0 0 1 11 0z"/>
+                            </svg>
+                        </Link>
+                    </ProductOverview>
 
 
-
-
-                    <HeartIcon  >
+                    <HeartIcon>
                         {/*onClick={handleClick}>*/}
                         <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
                              className="bi bi-heart HeartIcon" viewBox="-4 1 25 12">
@@ -69,10 +69,11 @@ const Product = ({item}) => {
                     </HeartIcon>
 
 
-            </ProductInfo>
-        </ProductContainer>
-        // </Link>
+                </ProductInfo>
+            </ProductContainer>
+            {/*</Link>*/}
 
+        </div>
     );
 };
 
@@ -127,10 +128,11 @@ const ProductInfo = styled.div`
 `;
 
 const ProductContainer = styled.div`
+
   flex: 1;
   margin: 5px;
-  min-width: 280px;
-  height: 350px;
+  min-width: 250px;
+  height: 250px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -145,7 +147,7 @@ const ProductContainer = styled.div`
 
 
 const ProductImage = styled.img`
-  height: 75%;
+  height: 50%;
   z-index: 2;
   
 `;

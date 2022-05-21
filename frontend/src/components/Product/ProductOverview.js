@@ -7,7 +7,7 @@ import { useDispatch } from "react-redux";
 import { addProduct} from "../../modernRedux/cartRedux";
 // import {Button} from "@mui/material";
 import {useLazyQuery, useQuery} from "@apollo/client";
-import {GET_PRODUCT_OVERVIEW} from "../../GraphQL/Queries";
+import {GET_PRODUCT_OVERVIEW, GET_SHOP} from "../../GraphQL/Queries";
 import {Link, useParams} from "react-router-dom";
 
 const ProductOverview = () => {
@@ -50,6 +50,8 @@ const ProductOverview = () => {
             addProduct({ ... product, quantity })
         );
     };
+
+
 
     return (
         <div style={{marginBottom: "500px"}}>
@@ -113,7 +115,7 @@ const ProductOverview = () => {
                              height: "80vh",
                              padding: "50px",
                          }}>
-                        <h5 style={{display: "flex", fontWeight: "150", justifyContent: "left"}}>BOB'S SHOP</h5>
+                        <h5 style={{display: "flex", fontWeight: "150", justifyContent: "left"}}>{product.shopName}</h5>
                         <div className="productDescription" style={{
                             display: "flex",
                             // alignItems: "center",
@@ -126,7 +128,7 @@ const ProductOverview = () => {
                         }}>
 
                             <div>
-                                21 sales
+                                {product.sale > 1 ? product.sale + " sales " : product.sale + " sale "}
                             </div>
 
                         </div>
@@ -151,7 +153,7 @@ const ProductOverview = () => {
 
                             <div className="productDesc" style={{}}>
                                 <b>Description:</b>
-                                {product.desc}
+                                {product.description}
 
                             </div>
 
