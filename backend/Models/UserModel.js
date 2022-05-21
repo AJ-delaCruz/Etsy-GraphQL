@@ -7,25 +7,25 @@ const usersSchema = new Schema({
         // email: {type: String, required: true},
         username: {type: String, required: true},
         password: {type: String, required: true},
-        name:{ type: String},
-        img:{ type: String},
-        street: {type: String},
-        state: {type: String},
-        city: {type: String},
-        country: {type: String},
-        zipCode: {type: Number},
-        email: {type: String},
-        phoneNum: {type: Number},
-        birthDay: {type: Date},
-        shopName:{ type: String},
-        shopImg:{ type: String},
-        products: [
-            {
-                productId: {
-                    type: String,
-                }
-            },
-        ],
+        name:{ type: String, default: null},
+        img:{ type: String, default: null},
+        street: {type: String, default: null},
+        state: {type: String, default: null},
+        city: {type: String, default: null},
+        country: {type: String, default: null},
+        zipCode: {type: Number, default: null},
+        email: {type: String, default: null},
+        phoneNum: {type: Number, default: null},
+        birthDay: {type: Date, default: null},
+        shopName:{ type: String, default: null},
+        shopImg:{ type: String, default: null},
+        // products: [
+        //     {
+        //         productId: {
+        //             type: String,
+        //         }
+        //     },
+        // ],
     },
 
     {
