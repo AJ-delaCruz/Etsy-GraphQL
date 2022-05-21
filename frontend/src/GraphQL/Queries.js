@@ -1,14 +1,5 @@
 import {gql} from "@apollo/client";
 
-export const LOAD_USERS = gql`
-  query {
-    getAllUsers {
-      id
-      email
-      password
-    }
-  }
-`;
 
 
 export const GET_PROFILE = gql`
@@ -20,6 +11,29 @@ export const GET_PROFILE = gql`
      
     }
   }
+`;
+
+
+export const GET_SHOP = gql`
+  query 
+  getShop($userId: ID!)  {
+    getShop(userId: $userId) {
+      username
+      name
+      shopName
+      shopImg
+    }
+  }
+`;
+export const GET_SELLER_PRODUCTS = gql`
+  query getSellerProduct($sellerId: ID!) {
+    getSellerProduct(sellerId: $sellerId) {
+      id, sellerId, title, img, description, categories, price, quantity
+
+      
+    }
+  }
+
 `;
 
 export const GET_PRODUCTS = gql`

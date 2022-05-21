@@ -22,6 +22,15 @@ module.exports = {
             const getShop = await User.findById(userId);
             return getShop;
         },
+        getSellerProduct: async (_, args) => {
+            const {sellerId} = args;
+            const sellerProduct = await Product.find({
+                sellerId: {
+                    $in: [sellerId],
+                }
+            });
+            return sellerProduct;
+        },
         getSingleProduct: async (_, args) => {
             const {id} = args;
             const singleProduct = await Product.findById(id);
@@ -66,7 +75,13 @@ module.exports = {
 
 
             return products;
-        }
+        },
+
+        uploads: async (_, args) => {
+            const {img} = args;
+            const getImg = await User.find(img);
+            return getImg;
+        },
     },
     Mutation: {
         register: async (_, args) => {
@@ -117,10 +132,14 @@ module.exports = {
         editProfile: async (_, args) => {
             const {userId, name, img, street, state, city, country, zipCode, email, phoneNum, birthDay} = args;
 
+            console.log(args);
 
             const updatedProfile = {
                 name, img, street, state, city, country, zipCode, email, phoneNum, birthDay
             };
+            console.log(img);
+            console.log(city);
+
 
             try {
                 const user = await User.findById(userId);
@@ -132,14 +151,29 @@ module.exports = {
 
                 const updatedUser = await User.findByIdAndUpdate(
                     userId,
-                    updatedProfile,
-                    {new: true}
+                    {$set: updatedProfile},
+                    // {new: true}
                 )
 
+                console.log(updatedUser)
                 return updatedUser;
             } catch (err) {
                 throw new UserInputError(err);
             }
+        },
+        singleUpload: async (parent, {file}) => {
+            const {filename, mimetype, encoding} = await file;
+            let stream = createReadStream();
+
+            let {ext, name} = parse(filename);
+            name = name.replace(/([^a-z0-9 ]+)/gi, '-').replace(' ', '_');
+            let serverFile = join(__dirname, `../../uploads/${name}-${Date.now()}${ext}`);
+            serverFile = serverFile.replace(' ', '_');
+            let writeStream = await createWriteStream(serverFile);
+            await stream.pipe(writeStream);
+            serverFile = `${BASE_URL}${serverFile.split('uploads')[1]}`;
+
+            return serverFile;
         },
 
         createShop: async (_, args) => {
@@ -240,6 +274,10 @@ module.exports = {
 
             };
         },
+
+        singleUpload: async (parent, {file}) => {
+            console.log(file); // always null
+        }
 
     },
 };

@@ -6,21 +6,26 @@ module.exports = gql`
     id: ID!
     username: String!
     password: String!
-    name:String!
-    img:String!
-    street: String!
-    state:String!
-    city: String!
-    country: String!
-    zipCode: Int!
-    email: String!
-    phoneNum: Int!
-    birthDay: String!
-    shopName:String!
-    shopImg:String!
+    name:String
+    img:String
+    street: String
+    state:String
+    city: String
+    country: String
+    zipCode: Int
+    email: String
+    phoneNum: Int
+    birthDay: String
+    shopName:String
+    shopImg:String
 
   }
-  
+  scalar Upload
+    type File {
+    filename: String!
+    mimetype: String!
+    encoding: String!
+  }
     type LoggedUser {
     id: ID!
     username: String!
@@ -52,18 +57,13 @@ module.exports = gql`
   type Query {
     getAllUsers: [UserList]!
     getProfile(userId: ID!): User!
-    getShop(userId: ID!): User!
+    getShop(userId: ID!): User
+    getSellerProduct(sellerId: ID!) : [ProductList]
     getSingleProduct(id: ID!) : ProductList!
-    getProducts(
-    title: String, 
-    categories: String, 
-    query: String, 
-    sortBy: String, 
-    filterBySearch: String): [ProductList]
-    
+    getProducts( title: String, categories: String, sortBy: String, filterBySearch: String): [ProductList]
     getAllProducts: [ProductList]
-   
-    
+    uploads: [File]
+  
   }
 
   type Mutation {
@@ -72,7 +72,8 @@ module.exports = gql`
     
     editProfile(
     userId: ID!
-    city: String!
+    city: String
+    img: String
     ): User!
     
     createShop(
@@ -107,7 +108,7 @@ module.exports = gql`
     price:  Int!
     ): ProductList!
     
-    
+    singleUpload(file: Upload!): File!
   }
   
   

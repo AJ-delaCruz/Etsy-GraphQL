@@ -1,4 +1,4 @@
-import { gql } from "@apollo/client";
+import {gql} from "@apollo/client";
 
 export const CREATE_USER_MUTATION = gql`
   mutation register(
@@ -10,7 +10,6 @@ export const CREATE_USER_MUTATION = gql`
       password: $password,
     ) {
     username
-    password
     }
   }
 `;
@@ -34,9 +33,48 @@ export const EDIT_PROFILE = gql`
     $userId: ID!
      $city: String!
   ) {
-    editProfile(userId: $userId, city: $city) {
+    editProfile(userId: $userId, city: $city ) {
       city
+      img
     }
   }
+`;
+const UPLOAD_FILE = gql`
+  mutation uploadFile($file: FileUpload!) {
+    singleUpload(file: $file) {
+      filename
+      mimetype
+      encoding
+    }
+  }
+`;
 
+export const CREATE_PRODUCT_MUTATION = gql`
+  mutation createProduct(
+    $sellerId: ID!
+    $title: String!
+    $description: String!
+    $img: String!
+    $categories: [String]!
+    $quantity: Int!
+    $price:  Int!
+  ) {
+    createProduct(
+    sellerId: $sellerId
+    title:  $title
+    description: $description
+    img: $img
+    categories: $categories
+    quantity:$quantity
+    price:$price
+    ) {
+     sellerId
+    title
+    description
+    img
+    categories
+    quantity
+    price
+    }
+  }
 `;
