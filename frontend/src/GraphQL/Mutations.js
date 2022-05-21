@@ -121,3 +121,15 @@ export const CREATE_ORDER_MUTATION = gql`
     }
   }
 `;
+
+export const CREATE_FAVORITE_MUTATION = gql`
+  mutation addFavorite(
+     $userId: ID!
+    $productID: ID!
+  ) {
+    addFavorite( userId: $userId, productID: $productID) {
+      userId
+      productId
+    }
+  }
+`;
