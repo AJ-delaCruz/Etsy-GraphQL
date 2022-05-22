@@ -39,7 +39,7 @@ function Login() {
         });
 
 
-
+        window.location.href ="/home";
     };
     return (
         <Container>
@@ -74,7 +74,7 @@ function Login() {
 
 const Container = styled.div`
 width: 100vw;
-height: 100vh;
+height: 50vh;
 display: flex;
 align-items: center;
 justify-content: center;

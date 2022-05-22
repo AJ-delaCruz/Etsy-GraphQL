@@ -25,10 +25,10 @@ function Signup() {
 
         });
         // history.push("/");
-        // window.location.href ="/home";
+        // window.location.href ="/login";
         if (error) {
             console.log(error);
-        }
+        } else window.location.href ="/login";
     };
 
     // let redirectVar = null;
@@ -77,7 +77,7 @@ function Signup() {
 
 const Container = styled.div`
 width: 100vw;
-height: 100vh;
+height: 50vh;
 display: flex;
 align-items: center;
 justify-content: center;

@@ -28,17 +28,8 @@ const Products = ({categories, filters, sort, searchValue}) => {
     // console.log(data.getAllProducts[0]);
     if (loading) return null;
     if (error) return `Error! ${error}`;
-    console.log(data.getAllProducts.map(x => x.id))
-    // setAllProducts(data)
-    // useEffect(() => {
-    //     //     if (data) {
-    //     //         setAllProducts(data);
-    //     //     }
-    //     // console.log(data.getAllProducts[0]);
-    //     setAllProducts(data.getAllProducts)
-    //     }, [data]);
-    // setAllProducts(data);
-    // console.log(allProducts)
+    // console.log(data.getAllProducts.map(x => x.id))
+
 
 
     // useEffect(() => {
@@ -93,7 +84,8 @@ const Products = ({categories, filters, sort, searchValue}) => {
     return (
 
         <div style={{
-            padding: "20px",
+            marginTop:"-200px",
+            padding: "200px",
             display: "flex",
             flexWrap: "wrap",
             justifyContent: "space-between"

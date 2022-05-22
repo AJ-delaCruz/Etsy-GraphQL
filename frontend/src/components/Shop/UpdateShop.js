@@ -1,6 +1,5 @@
 import React from 'react';
 import {Button, Modal} from "react-bootstrap";
-// import axios from "axios";
 import {useMutation, useQuery} from "@apollo/client";
 import {CREATE_PRODUCT_MUTATION} from "../../GraphQL/Mutations";
 import {useState} from "react";
@@ -23,11 +22,11 @@ const UpdateShop = () => {
     });
 
 
-    const [product, {error}] = useMutation(CREATE_PRODUCT_MUTATION);
+    const [createProduct, {error}] = useMutation(CREATE_PRODUCT_MUTATION);
 //button to add product
     const addProduct = () => {
         setShowWindow(false)
-        product({
+        createProduct({
             variables: {
                 sellerId: userId,
                 shopName: data.getShop.shopName,
