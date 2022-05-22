@@ -63,6 +63,7 @@ module.exports = gql`
     img: String
     quantity: Int
     price:  Int
+    createdAt: String
   }
     type Favorite  {
     id: ID!

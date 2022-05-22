@@ -164,6 +164,7 @@ export const GET_ORDER_PRODUCTS = gql`
         img
         quantity
         price
+        createdAt
 
     }
   }
