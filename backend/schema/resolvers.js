@@ -7,7 +7,6 @@ const jwt = require('jsonwebtoken');
 const {secret} = require('../Utils/config')
 // const {auth} = require("../Utils/passport");
 const bcrypt = require('bcrypt');
-const {checkAuth} = require("../utils/passport");
 
 // auth();
 
@@ -49,6 +48,12 @@ module.exports = {
             const {userId} = args;
             const favoriteProducts = await Favorite.find({userId: userId});
             return favoriteProducts;
+        },
+
+        getOrder: async (_, args) => {
+            const {userId} = args;
+            const orders = await Order.find({userId: userId});
+            return orders;
         },
         getProducts: async (_, args) => {
             const {categories, sortBy, filterBySearch} = args;
@@ -313,7 +318,7 @@ module.exports = {
             return product;
         },
 
-        createOrder: async (_, args) => {
+        makeOrder: async (_, args) => {
             const {userId, productId, title, img, price, quantity} = args;
 
             const newOrder = new Order({
@@ -332,12 +337,7 @@ module.exports = {
 
             };
         },
-
-        singleUpload: async (parent, {file}) => {
-            console.log(file);
-        },
-
-        addFavorite: async (_, args) => {
+        addFavoriteProduct: async (_, args) => {
             const {userId, productId} = args;
 
             const newFavorite = new Favorite({
@@ -349,10 +349,11 @@ module.exports = {
                 id: savedFavorite._id,
                 userId: savedFavorite.userId,
                 productId: savedFavorite.productId,
+                // savedFavorite
 
             };
         },
-        removeFavorite: async (_, args) => {
+        removeFavoriteProduct: async (_, args) => {
             const {id} = args;
 
             const favorite = await Favorite.findById(id);
@@ -363,10 +364,7 @@ module.exports = {
             }
             await Favorite.findByIdAndDelete(id);
             return favorite;
-
         },
-
-
 
 
     },

@@ -81,6 +81,7 @@ module.exports = gql`
     getAllProducts: [ProductList]
     uploads: [File]
     getFavoriteProducts(userId: ID!) : [Favorite]
+    getOrder(userId: ID!) : [Order]
   
   }
 
@@ -123,8 +124,7 @@ module.exports = gql`
     price:  Int!
     ): ProductList!
     
-    
-    
+   
     editProduct(
     id: ID!
     title: String!
@@ -139,7 +139,7 @@ module.exports = gql`
     id: ID!
     ): ProductList!
     
-    createOrder(
+    makeOrder(
     userId: ID!
     productId: ID!
     title: String!
@@ -150,12 +150,12 @@ module.exports = gql`
     
     singleUpload(file: Upload!): File!
 
-    addFavorite(
+    addFavoriteProduct(
     userId: ID!
     productId: ID!
-    ): Favorite!
+    ): Favorite
     
-    removeFavorite(
+    removeFavoriteProduct(
     id: ID!
     ): Favorite!
   

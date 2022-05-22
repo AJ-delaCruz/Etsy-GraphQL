@@ -95,8 +95,14 @@ export const CREATE_PRODUCT_MUTATION = gql`
     }
   }
 `;
+
+export const REMOVE_PRODUCT_MUTATION = gql`
+  mutation removeProduct($id: ID!) {
+    removeProduct(id: $id)
+  }
+`;
 export const CREATE_ORDER_MUTATION = gql`
-  mutation createOrder(
+  mutation makeOrder(
     $productId: ID!
     $userId: ID!
     $title: String!
@@ -104,7 +110,7 @@ export const CREATE_ORDER_MUTATION = gql`
     $quantity: Int!
     $price:  Int!
   ) {
-    createOrder(
+    makeOrder(
     productId: $productId
     userId: $userId
     title:  $title
@@ -123,13 +129,19 @@ export const CREATE_ORDER_MUTATION = gql`
 `;
 
 export const CREATE_FAVORITE_MUTATION = gql`
-  mutation addFavorite(
-     $userId: ID!
-    $productID: ID!
+  mutation addFavoriteProduct(
+    $userId: ID!
+    $productId: ID!
   ) {
-    addFavorite( userId: $userId, productID: $productID) {
+    addFavoriteProduct( userId: $userId, productId: $productId) {
       userId
       productId
     }
+  }
+`;
+
+export const REMOVE_FAVORITE_MUTATION = gql`
+  mutation removeFavoriteProduct($id: ID!) {
+    removeFavoriteProduct(id: $id)
   }
 `;
